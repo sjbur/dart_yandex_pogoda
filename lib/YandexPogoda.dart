@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
-Future<Forecast> search(String yandexUrl) async {
-  // example: https://yandex.ru/pogoda/213
+Future<Forecast> extract(String yandexUrl) async {
+  // example: https://yandex.ru/pogoda/2
   Uri link = Uri.parse(yandexUrl);
 
   var request = await http.Client().get(link);
@@ -34,7 +32,7 @@ Future<Forecast> search(String yandexUrl) async {
   return fr;
 }
 
-Future<List<City>> searchCity(String city) async {
+Future<List<City>> searchCityByName(String city) async {
   List<City> res = new List<City>();
   Uri link = Uri.parse("https://yandex.ru/pogoda/search?request=" + city);
 
@@ -49,6 +47,13 @@ Future<List<City>> searchCity(String city) async {
   });
 
   return res;
+}
+
+Future<Forecast> searchForecastByCoords(
+    double longitude, double latitude) async {
+  // https://yandex.ru/pogoda/?lat=59.93486023&lon=30.3153553
+  return await extract(
+      "https://yandex.ru/pogoda/?lat={$latitude}3&lon={$longitude}");
 }
 
 class Forecast {

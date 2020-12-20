@@ -27,7 +27,7 @@ class _ScreenState extends State<Screen> {
 
   void checkSearchText() async {
     if (textController.text.isNotEmpty) {
-      cities = await Pogoda.searchCity(textController.text);
+      cities = await Pogoda.searchCityByName(textController.text);
     } else {
       cities = null;
     }
@@ -50,7 +50,7 @@ class _ScreenState extends State<Screen> {
               TextField(
                 controller: textController,
                 onSubmitted: (value) async {
-                  cities = await Pogoda.searchCity(textController.text);
+                  cities = await Pogoda.searchCityByName(textController.text);
                   setState(() {});
                 },
                 decoration: InputDecoration(
