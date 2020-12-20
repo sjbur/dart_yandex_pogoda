@@ -9,6 +9,10 @@ Future<Forecast> extract(String yandexUrl) async {
   var document = parse(request.body);
 
   Forecast fr = new Forecast();
+  fr.placeName = document
+      .getElementsByClassName("title title_level_1 header-title__title")
+      .first
+      .text;
   fr.weatherState =
       document.getElementsByClassName("link__condition").first.innerHtml;
   fr.currentTemp =
@@ -17,6 +21,8 @@ Future<Forecast> extract(String yandexUrl) async {
       document.getElementsByClassName("temp__value")[2].innerHtml;
   fr.wind = document.getElementsByClassName("wind-speed")[0].innerHtml;
   fr.windDir = document.getElementsByClassName(" icon-abbr")[0].innerHtml;
+  document.getElementsByClassName(" icon-abbr")[0].remove();
+  fr.windMeasure = document.getElementsByClassName("fact__unit")[0].text;
 
   fr.humidity = document
       .getElementsByClassName("term term_orient_v fact__humidity")[0]
@@ -24,10 +30,9 @@ Future<Forecast> extract(String yandexUrl) async {
       .text;
 
   fr.pressure = document
-          .getElementsByClassName("term term_orient_v fact__pressure")[0]
-          .getElementsByClassName("term__value")[0]
-          .text +
-      "мм рт. ст.";
+      .getElementsByClassName("term term_orient_v fact__pressure")[0]
+      .getElementsByClassName("term__value")[0]
+      .text;
 
   return fr;
 }
@@ -52,11 +57,13 @@ Future<List<City>> searchCityByName(String city) async {
 Future<Forecast> searchForecastByCoords(
     double longitude, double latitude) async {
   // https://yandex.ru/pogoda/?lat=59.93486023&lon=30.3153553
+  print("https://yandex.ru/pogoda/?lat=$latitude&lon=$longitude");
   return await extract(
-      "https://yandex.ru/pogoda/?lat={$latitude}3&lon={$longitude}");
+      "https://yandex.ru/pogoda/?lat=$latitude&lon=$longitude");
 }
 
 class Forecast {
+  String placeName;
   String weatherState;
   String currentTemp;
   String feelsLikeTemp;
@@ -66,6 +73,7 @@ class Forecast {
 
   String wind;
   String windDir;
+  String windMeasure;
 }
 
 class City {
