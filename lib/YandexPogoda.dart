@@ -34,6 +34,31 @@ Future<Forecast> extract(String yandexUrl) async {
       .getElementsByClassName("term__value")[0]
       .text;
 
+  document.getElementsByClassName("fact__hour swiper-slide").forEach((element) {
+    try {
+      String time = element.getElementsByClassName("fact__hour-label")[0].text;
+      String degree = element.getElementsByClassName("fact__hour-temp")[0].text;
+      String icon;
+      document
+          .getElementsByClassName("fact__hour swiper-slide")[0]
+          .nodes[0]
+          .children
+          .forEach((child) {
+        if (child.attributes.containsKey("src")) {
+          child.classes.forEach((childClass) {
+            if (childClass.contains("icon_thumb_")) {
+              icon = childClass.replaceAll("icon_thumb_", "");
+            }
+          });
+        }
+      });
+
+      fr.forecastForNext24Hours.add(ForecastForHour(time, degree, icon));
+    } catch (ex) {
+      print(ex);
+    }
+  });
+
   return fr;
 }
 
@@ -74,6 +99,21 @@ class Forecast {
   String wind;
   String windDir;
   String windMeasure;
+
+  List<ForecastForHour> forecastForNext24Hours = new List<ForecastForHour>();
+}
+
+class ForecastForHour {
+  String time;
+  String conditionIcon;
+  String degree;
+
+  ForecastForHour(this.time, this.degree, this.conditionIcon);
+}
+
+String findConditionIcon(String str) {
+  print(str);
+  return "";
 }
 
 class City {

@@ -72,8 +72,11 @@ class _ScreenState extends State<Screen> {
           itemBuilder: (context, int index) {
             return Card(
               child: InkWell(
-                onTap: () {
-                  print(cities[index].cityUrl);
+                onTap: () async {
+                  Pogoda.Forecast fr =
+                      await Pogoda.extract(cities[index].cityUrl);
+                  //print(cities[index].cityUrl);
+                  // showForecast(fr);
                 },
                 child: ListTile(
                   shape: Border.all(),
@@ -88,10 +91,11 @@ class _ScreenState extends State<Screen> {
 }
 
 void showForecast(Pogoda.Forecast forecast) {
-  print("Погода: " + forecast.weatherState);
-  print("Текущая температура: " + forecast.currentTemp);
-  print("ощущается как: " + forecast.feelsLikeTemp);
-  print("Ветер: " + forecast.wind + " м/с, " + forecast.windDir);
-  print("Влажность: " + forecast.humidity);
-  print("Давление: " + forecast.pressure);
+  // print("Погода: " + forecast.weatherState);
+  // print("Текущая температура: " + forecast.currentTemp);
+  // print("ощущается как: " + forecast.feelsLikeTemp);
+  // print("Ветер: " + forecast.wind + " м/с, " + forecast.windDir);
+  // print("Влажность: " + forecast.humidity);
+  // print("Давление: " + forecast.pressure);
+  print(forecast.forecastForNext24Hours.length);
 }
